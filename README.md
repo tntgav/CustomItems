@@ -12,3 +12,6 @@ due to the complexity of making it work with configs, unfortunately there is no 
 ## Installation
 
 similar to any NWAPI plugin, you simply download the DLL and put it into appdata/roaming/SCP Secret Laboratory/PluginAPI/(port number OR global) and it'll just work
+
+## note
+this will not be finished anytime soon lol i have had better things to work on
