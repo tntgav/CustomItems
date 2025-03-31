@@ -1,8 +1,8 @@
 ﻿using AdminToys;
 using InventorySystem.Items;
 using InventorySystem.Items.Pickups;
+using LabApi.Features.Wrappers;
 using Mirror;
-using PluginAPI.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -66,7 +66,7 @@ namespace CustomItems
     {
         public static Dictionary<string, CustomItemType> Types = new Dictionary<string, CustomItemType>();
 
-        
+        public ItemType ItemType;
         public TriggerTypes Trigger;
         public string InternalName;
         public string Name;
@@ -82,8 +82,9 @@ namespace CustomItems
         public int RegenerateAmount;
         public float RegenerateRate;
 
-        public CustomItemType(TriggerTypes trigger, string internalName, string name, string description, Color useColor, Action<Player, ItemBase> use, float glowRange, float glowIntensity) //glow enabled
+        public CustomItemType(ItemType itemType, TriggerTypes trigger, string internalName, string name, string description, Color useColor, Action<Player, ItemBase> use, float glowRange, float glowIntensity) //glow enabled
         {
+            ItemType = itemType;
             Trigger = trigger;
             InternalName = internalName;
             Name = name;
@@ -97,8 +98,9 @@ namespace CustomItems
             
         }
 
-        public CustomItemType(TriggerTypes trigger, string internalName, string name, string description, Color useColor, Action<Player, ItemBase> use) //no glow
+        public CustomItemType(ItemType itemType, TriggerTypes trigger, string internalName, string name, string description, Color useColor, Action<Player, ItemBase> use) //no glow
         {
+            ItemType = itemType;
             Trigger = trigger;
             InternalName = internalName;
             Name = name;
@@ -129,5 +131,6 @@ namespace CustomItems
         Die,
         SpawnWave,
         PerFrame,
+        Explode,
     }
 }

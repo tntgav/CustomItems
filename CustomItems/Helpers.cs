@@ -3,7 +3,7 @@ using InventorySystem.Items.Pickups;
 using InventorySystem.Items.ThrowableProjectiles;
 using InventorySystem.Items;
 using Mirror;
-using PluginAPI.Core;
+using LabApi.Features.Console;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 using UnityEngine;
 using CustomPlayerEffects;
 using AdminToys;
+using LabApi.Features.Wrappers;
+using ThrowableItem = InventorySystem.Items.ThrowableProjectiles.ThrowableItem;
 
 namespace CustomItems
 {
@@ -35,12 +37,21 @@ namespace CustomItems
             phys.Rb.velocity = velocity;
             NetworkServer.Spawn(grenade.gameObject);
             grenade.ServerActivate();
+
+            
         }
 
         public static ThrowableItem CreateThrowable(ItemType type, Player player = null) => (player != null ? player.ReferenceHub : ReferenceHub.HostHub)
             .inventory.CreateItemInstance(new ItemIdentifier(type, ItemSerialGenerator.GenerateNext()), false) as ThrowableItem;
 
-
+        public static ItemPickupBase CreatePickup(Vector3 position, ItemBase prefab, Vector3 rotation)
+        {
+            ItemPickupBase clone = UnityEngine.Object.Instantiate(prefab.PickupDropModel, position, Quaternion.identity);
+            clone.NetworkInfo = new PickupSyncInfo(prefab.ItemTypeId, prefab.Weight);
+            clone.PreviousOwner = new Footprint(ReferenceHub.HostHub);
+            clone.transform.rotation = Quaternion.Euler(rotation);
+            return clone;
+        }
         public static void AddEffect<T>(Player player, byte intensity, int addedDuration = 0) where T : StatusEffectBase
         {
             foreach (StatusEffectBase effect in player.ReferenceHub.playerEffectsController.AllEffects)
@@ -78,7 +89,7 @@ namespace CustomItems
                     if (collision) { prim.PrimitiveFlags = PrimitiveFlags.Collidable | PrimitiveFlags.Visible; } else { prim.PrimitiveFlags = PrimitiveFlags.Visible; }
 
                     NetworkServer.Spawn(prim.gameObject);
-                    Log.Info("Object spawned!");
+                    Logger.Info("Object spawned!");
                     return prim;
                 }
             }
